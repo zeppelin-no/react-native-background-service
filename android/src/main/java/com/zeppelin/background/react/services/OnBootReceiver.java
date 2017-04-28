@@ -23,7 +23,7 @@ public class OnBootReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.e(TAG, "#onReceive triggered");
+    Log.e(TAG, "#onReceive triggered - boot");
 
     triggerOnce(context);
   }
@@ -35,21 +35,21 @@ public class OnBootReceiver extends BroadcastReceiver {
 
     if (!hasLaunched) {
       Log.e(TAG, "triggerOnce - has not launched");
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_CANCEL_CURRENT);
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_IMMUTABLE);
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_NO_CREATE);
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_ONE_SHOT);
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_UPDATE_CURRENT);
+      // Log.e(TAG, "lol: " + PendingIntent.FLAG_CANCEL_CURRENT);
+      // Log.e(TAG, "lol: " + PendingIntent.FLAG_IMMUTABLE);
+      // Log.e(TAG, "lol: " + PendingIntent.FLAG_NO_CREATE);
+      // Log.e(TAG, "lol: " + PendingIntent.FLAG_ONE_SHOT);
+      // Log.e(TAG, "lol: " + PendingIntent.FLAG_UPDATE_CURRENT);
 
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
       Intent i = new Intent(context, OnAlarmReceiver.class);
 
-      boolean alarmUp = (PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_NO_CREATE) != null);
-
-      if (alarmUp) {
-        Log.d("myTag", "Alarm is already active");
-      }
+      // boolean alarmUp = (PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_NO_CREATE) != null);
+      //
+      // if (alarmUp) {
+      //   Log.d("myTag", "Alarm is already active");
+      // }
 
       PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, i, 0);
 
