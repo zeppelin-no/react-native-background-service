@@ -1,0 +1,16 @@
+<manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.zeppelin.background.react"
+>
+  <application>
+    <!-- Background task -->
+    <receiver android:name=".service.OnBootReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+        </intent-filter>
+    </receiver>
+    <receiver android:name=".service.OnAlarmReceiver" />
+    <service android:name=".service.BackgroundTaskService" />
+  </application>
+</manifest>
