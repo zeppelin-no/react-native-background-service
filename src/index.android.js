@@ -51,41 +51,20 @@ const jobs = {};
 
 const BackgroundTask: BackgroundTaskInterface = {
   register: async (task) => {
-    console.log('BackgroundTask');
     const fn = async () => { task(); };
 
     AppRegistry.registerHeadlessTask(JOB_KEY, () => fn);
 
     DeviceEventEmitter.addListener("RNBackgroundJob", task);
-    console.log(fn);
-    // AppState.getCurrentAppState(
-    //   (something) => {
-    //     console.log(something);
-    //   },
-    //   () => { console.error('Cant get AppState'); }
-    // );
-    console.log('waiting for response');
-
-    // if (existingJob) {
-    //   jobs[jobKey].registered = true;
-    // } else {
-    //   const scheduledJob = nativeJobs.filter(nJob => nJob.jobKey == jobKey);
-    //   const scheduled = scheduledJob[0] != undefined;
-    //   jobs[jobKey] = { registered: true, scheduled, job };
-    // }
 
     const response = await BackgroundService.register(task);
 
-    console.log(response);
+    return response;
   },
 
   cancel: () => {},
 
   finish: () => {},
 };
-
-// AppRegistry.registerHeadlessTask('BackgroundTask', () =>
-//   require('./SomeTaskName')
-// );
 
 export default BackgroundTask;

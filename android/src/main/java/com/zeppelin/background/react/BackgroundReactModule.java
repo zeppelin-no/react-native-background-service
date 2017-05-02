@@ -62,21 +62,16 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
 
     if (!hasLaunched) {
       Log.e(TAG, "triggerOnce - has not launched");
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_CANCEL_CURRENT);
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_IMMUTABLE);
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_NO_CREATE);
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_ONE_SHOT);
-      Log.e(TAG, "lol: " + PendingIntent.FLAG_UPDATE_CURRENT);
 
       AlarmManager alarmManager = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
 
       Intent i = new Intent(this.context, OnAlarmReceiver.class);
 
-      boolean alarmUp = (PendingIntent.getBroadcast(this.context, 0, i, PendingIntent.FLAG_NO_CREATE) != null);
-
-      if (alarmUp) {
-        Log.d("myTag", "Alarm is already active");
-      }
+      // boolean alarmUp = (PendingIntent.getBroadcast(this.context, 0, i, PendingIntent.FLAG_NO_CREATE) != null);
+      //
+      // if (alarmUp) {
+      //   Log.d("myTag", "Alarm is already active");
+      // }
 
       PendingIntent pendingIntent = PendingIntent.getBroadcast(this.context, 0, i, 0);
 
@@ -104,7 +99,7 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     Log.i(TAG, "");
     Log.i(TAG, "cancel");
 
-    Intent intent = new Intent(this, OnAlarmReceiver.class);
+    Intent intent = new Intent(this.context, OnAlarmReceiver.class);
     PendingIntent pendingIntent = PendingIntent.getBroadcast(this.context, 0, intent, 0);
     AlarmManager alarmManager = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
 
