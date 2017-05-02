@@ -24,8 +24,9 @@ public class OnBootReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     Log.e(TAG, "#onReceive triggered - boot");
+    Log.e(TAG, "#onReceive not starting on boot atm");
 
-    triggerOnce(context);
+    // triggerOnce(context);
   }
 
   public static void triggerOnce(Context context) {
