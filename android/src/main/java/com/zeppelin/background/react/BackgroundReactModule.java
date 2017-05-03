@@ -28,6 +28,7 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
   private Context context;
 
   private final static String REACT_MODULE_NAME = "BackgroundService";
+  private final static int PENDING_INTENT_ID = 987;
   public static final String TAG = "RCTBGService";
   private static final long INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
 
@@ -63,25 +64,27 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     if (!hasLaunched) {
       Log.e(TAG, "triggerOnce - has not launched");
 
-      AlarmManager alarmManager = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
 
       Intent i = new Intent(this.context, OnAlarmReceiver.class);
 
-      // boolean alarmUp = (PendingIntent.getBroadcast(this.context, 0, i, PendingIntent.FLAG_NO_CREATE) != null);
-      //
-      // if (alarmUp) {
-      //   Log.d("myTag", "Alarm is already active");
-      // }
+      PendingIntent pi = PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, i, PendingIntent.FLAG_NO_CREATE);
 
-      PendingIntent pendingIntent = PendingIntent.getBroadcast(this.context, 0, i, 0);
+      if (pi != null) {
+        Log.d(TAG, "Alarm is already active");
+        pi.cancel();
+      }
+
+      // PendingIntent pendingIntent = PendingIntent.getBroadcast(this.context, 0, i, 0);
 
       Log.e(TAG, "triggerOnce - something osmething");
 
-      alarmManager.setInexactRepeating(
+      AlarmManager am = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
+
+      am.setInexactRepeating(
         AlarmManager.ELAPSED_REALTIME_WAKEUP,
         SystemClock.elapsedRealtime(),
         INTERVAL,
-        pendingIntent
+        pi
       );
     }
 

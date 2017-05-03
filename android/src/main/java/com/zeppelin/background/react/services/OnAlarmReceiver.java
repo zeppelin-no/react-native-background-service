@@ -16,6 +16,7 @@ public class OnAlarmReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     Log.e(TAG, "OnAlarmReceiver triggered");
+    Log.e(TAG, "OnAlarmReceiver triggered" + intent.getAction());
     if (!isAppOnForeground((context))) {
       Log.e(TAG, "OnAlarmReceiver is in background!");
       // boolean hasInternet = checkInternet(context);
