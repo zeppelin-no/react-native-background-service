@@ -1,6 +1,6 @@
 {
   "name": "react-native-background-service",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Cross platform background service for react-native",
   "main": "index.js",
   "scripts": {

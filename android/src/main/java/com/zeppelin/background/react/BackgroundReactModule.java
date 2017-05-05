@@ -29,6 +29,7 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
 
   private final static String REACT_MODULE_NAME = "BackgroundService";
   private final static int PENDING_INTENT_ID = 987;
+  private final static String PENDING_INTENT_ACTION = "RCTBGServiceAction";
   public static final String TAG = "RCTBGService";
   private static final long INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
 
@@ -62,35 +63,34 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     Log.e(TAG, "");
 
     if (!hasLaunched) {
-      Log.e(TAG, "triggerOnce - has not launched");
+      if (!this.isPendingIntentWorking()) {
+        AlarmManager am = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(this.context, OnAlarmReceiver.class);
+        i.setAction(PENDING_INTENT_ACTION);
 
+        PendingIntent pi = PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, i, PendingIntent.FLAG_CANCEL_CURRENT);
 
-      Intent i = new Intent(this.context, OnAlarmReceiver.class);
-
-      PendingIntent pi = PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, i, PendingIntent.FLAG_NO_CREATE);
-
-      if (pi != null) {
-        Log.d(TAG, "Alarm is already active");
-        pi.cancel();
+        Log.e(TAG, "triggerOnce - setting repeating alarm");
+        am.setInexactRepeating(
+          AlarmManager.ELAPSED_REALTIME_WAKEUP,
+          SystemClock.elapsedRealtime(),
+          INTERVAL,
+          pi
+        );
       }
-
-      // PendingIntent pendingIntent = PendingIntent.getBroadcast(this.context, 0, i, 0);
-
-      Log.e(TAG, "triggerOnce - something osmething");
-
-      AlarmManager am = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
-
-      am.setInexactRepeating(
-        AlarmManager.ELAPSED_REALTIME_WAKEUP,
-        SystemClock.elapsedRealtime(),
-        INTERVAL,
-        pi
-      );
     }
 
     hasLaunched = true;
 
     promise.resolve(true);
+  }
+
+  private boolean isPendingIntentWorking() {
+    Intent intent = new Intent(this.context, OnAlarmReceiver.class);
+    intent.setAction(PENDING_INTENT_ACTION);
+    boolean isWorking = (PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, intent, PendingIntent.FLAG_NO_CREATE) != null);
+    Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
+    return isWorking;
   }
 
   @ReactMethod
@@ -102,11 +102,13 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     Log.i(TAG, "");
     Log.i(TAG, "cancel");
 
+    AlarmManager am = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
     Intent intent = new Intent(this.context, OnAlarmReceiver.class);
-    PendingIntent pendingIntent = PendingIntent.getBroadcast(this.context, 0, intent, 0);
-    AlarmManager alarmManager = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
+    intent.setAction(PENDING_INTENT_ACTION);
+    PendingIntent pi = PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, intent, 0);
 
-    alarmManager.cancel(pendingIntent);
+    am.cancel(pi);
+    pi.cancel();
 
     promise.resolve(true);
   }
