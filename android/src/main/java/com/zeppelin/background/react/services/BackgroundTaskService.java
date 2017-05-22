@@ -17,16 +17,21 @@ public class BackgroundTaskService extends HeadlessJsTaskService {
   protected @Nullable HeadlessJsTaskConfig getTaskConfig(Intent intent) {
     Bundle extras = intent.getExtras();
 
-    Log.e(TAG, "HeadlessJsTaskConfig");
+    Log.i(TAG, "HeadlessJsTaskConfig");
 
     if (extras != null) {
-      Log.e(TAG, "HeadlessJsTaskConfig - extraz, triggering task!?!?");
-
-      return new HeadlessJsTaskConfig(
-        "BackgroundTask",
-        Arguments.fromBundle(extras),
-        5000
-      );
+      Log.i(TAG, "HeadlessJsTaskConfig - extraz, triggering task!?!?");
+      try {
+        return new HeadlessJsTaskConfig(
+          "BackgroundTask",
+          Arguments.fromBundle(extras),
+          5000
+        );
+      } catch(Exception e) {
+          Log.e(TAG, "error setting up headless js task");
+          e.printStackTrace();
+          return null;
+      }
     }
     return null;
   }

@@ -58,19 +58,17 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     Log.i(TAG, "");
     Log.i(TAG, "register");
 
-    Log.e(TAG, "");
-    Log.e(TAG, "======== triggerOnce ========");
-    Log.e(TAG, "");
-
     if (!hasLaunched) {
       if (!this.isPendingIntentWorking()) {
+        Log.i(TAG, "Adding alarm!!!!");
+
         AlarmManager am = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this.context, OnAlarmReceiver.class);
         i.setAction(PENDING_INTENT_ACTION);
 
         PendingIntent pi = PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, i, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Log.e(TAG, "triggerOnce - setting repeating alarm");
+        Log.i(TAG, "triggerOnce - setting repeating alarm");
         am.setInexactRepeating(
           AlarmManager.ELAPSED_REALTIME_WAKEUP,
           SystemClock.elapsedRealtime(),
@@ -89,7 +87,7 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     Intent intent = new Intent(this.context, OnAlarmReceiver.class);
     intent.setAction(PENDING_INTENT_ACTION);
     boolean isWorking = (PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, intent, PendingIntent.FLAG_NO_CREATE) != null);
-    Log.d(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
+    Log.i(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
     return isWorking;
   }
 

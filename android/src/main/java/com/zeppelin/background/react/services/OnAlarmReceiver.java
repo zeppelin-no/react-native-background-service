@@ -15,10 +15,10 @@ public class OnAlarmReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.e(TAG, "OnAlarmReceiver triggered");
-    Log.e(TAG, "OnAlarmReceiver action: " + intent.getAction());
+    Log.i(TAG, "======= OnAlarmReceiver triggered =======");
+    Log.i(TAG, "OnAlarmReceiver action: " + intent.getAction());
     if (!isAppOnForeground((context))) {
-      Log.e(TAG, "OnAlarmReceiver is in background!");
+      Log.i(TAG, "OnAlarmReceiver is in background!");
       // boolean hasInternet = checkInternet(context);
       Intent serviceIntent = new Intent(context, BackgroundTaskService.class);
       serviceIntent.putExtra("hasInternet", "java - testur");
