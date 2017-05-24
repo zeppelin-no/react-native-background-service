@@ -48,13 +48,13 @@ const BackgroundTask: BackgroundTaskInterface = {
 
 const BackgroundTask: BackgroundTaskInterface = {
   register: async (task, options = backgroundConfig) => {
-    console.log(options);
     const fn = async () => { task(); };
 
     AppRegistry.registerHeadlessTask(JOB_KEY, () => fn);
 
     DeviceEventEmitter.addListener('RNBackgroundJob', task);
 
+    console.log(options);
     const response = await BackgroundService.register(options);
 
     return response;
