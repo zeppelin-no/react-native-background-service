@@ -1,5 +1,3 @@
-// @flow
-
 import RNBackgroundFetch from 'react-native-background-fetch';
 
 import type { BackgroundTaskInterface } from './types';

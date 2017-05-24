@@ -48,6 +48,7 @@ const BackgroundTask: BackgroundTaskInterface = {
 
 const BackgroundTask: BackgroundTaskInterface = {
   register: async (task, options = backgroundConfig) => {
+    console.log(options);
     const fn = async () => { task(); };
 
     AppRegistry.registerHeadlessTask(JOB_KEY, () => fn);
