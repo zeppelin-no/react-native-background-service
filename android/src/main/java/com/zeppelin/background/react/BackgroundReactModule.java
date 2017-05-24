@@ -31,7 +31,7 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
   private final static int PENDING_INTENT_ID = 987;
   private final static String PENDING_INTENT_ACTION = "RCTBGServiceAction";
   public static final String TAG = "RCTBGService";
-  private static final long INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+  // private static final long INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
 
   private static boolean hasLaunched = false;
 
@@ -57,10 +57,14 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     Log.i(TAG, "");
     Log.i(TAG, "");
     Log.i(TAG, "register");
+    Log.i(TAG, "register with options: " + options);
 
     if (!hasLaunched) {
       if (!this.isPendingIntentWorking()) {
+        long INTERVAL = getIntervalFromOptions(options);
+
         Log.i(TAG, "Adding alarm!!!!");
+        Log.i(TAG, "Interval: " + INTERVAL);
 
         AlarmManager am = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this.context, OnAlarmReceiver.class);
@@ -83,11 +87,32 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     promise.resolve(true);
   }
 
+  private long getIntervalFromOptions(ReadableMap options) {
+    Log.i(TAG, "getIntervalFromOptions, options: " + options);
+    if (options.hasKey("period") && !options.isNull("period")) {
+      String period = options.getString("period");
+      switch (period) {
+        case "INTERVAL_DAY":
+          return AlarmManager.INTERVAL_DAY;
+        case "INTERVAL_HALF_DAY":
+          return AlarmManager.INTERVAL_HALF_DAY;
+        case "INTERVAL_HALF_HOUR":
+          return AlarmManager.INTERVAL_HALF_HOUR;
+        case "INTERVAL_FIFTEEN_MINUTES":
+          return AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+        case "INTERVAL_HOUR":
+        default:
+          return AlarmManager.INTERVAL_HOUR;
+      }
+    }
+    return AlarmManager.INTERVAL_HOUR;
+  }
+
   private boolean isPendingIntentWorking() {
     Intent intent = new Intent(this.context, OnAlarmReceiver.class);
     intent.setAction(PENDING_INTENT_ACTION);
     boolean isWorking = (PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, intent, PendingIntent.FLAG_NO_CREATE) != null);
-    Log.i(TAG, "alarm is " + (isWorking ? "" : "not") + " working...");
+    Log.i(TAG, "alarm is" + (isWorking ? "" : " NOT") + " working...");
     return isWorking;
   }
 

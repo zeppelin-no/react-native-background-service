@@ -1,3 +1,5 @@
+// @flow
+
 import RNBackgroundFetch from 'react-native-background-fetch';
 
 import type { BackgroundTaskInterface } from './types';
@@ -19,24 +21,13 @@ const BackgroundTask: BackgroundTaskInterface = {
       task,
       () => { console.error('Device doesnt support Background Fetch'); },
     );
+  },
 
-    // eventEmitter.addListener('fetch', task);
-
-    RNBackgroundFetch.status(status => {
-      switch (status) {
-        case RNBackgroundFetch.STATUS_RESTRICTED:
-          console.log('RNBackgroundFetch restricted');
-          break;
-        case RNBackgroundFetch.STATUS_DENIED:
-          console.log('RNBackgroundFetch denied');
-          break;
-        case RNBackgroundFetch.STATUS_AVAILABLE:
-          console.log('RNBackgroundFetch is enabled');
-          break;
-        default:
-          console.log('all is good');
-          break;
-      }
+  status: () => {
+    return new Promise((resolve) => {
+      RNBackgroundFetch.status(status => {
+        resolve(status);
+      });
     });
   },
 

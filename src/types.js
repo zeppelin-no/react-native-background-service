@@ -1,8 +1,9 @@
 // @flow
 
+type Periods = 'INTERVAL_DAY' | 'INTERVAL_FIFTEEN_MINUTES' | 'INTERVAL_HALF_DAY' | 'INTERVAL_HALF_HOUR' | 'INTERVAL_HOUR';
+
 export type RegisterOptions = {
-  period?: number,
-  timeout?: number,
+  period?: Periods,
 }
 
 export type BackgroundTaskInterface = {
