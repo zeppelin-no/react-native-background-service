@@ -57,14 +57,12 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     Log.i(TAG, "");
     Log.i(TAG, "");
     Log.i(TAG, "register");
-    Log.i(TAG, "register with options: " + options);
 
     if (!hasLaunched) {
       if (!this.isPendingIntentWorking()) {
         long INTERVAL = getIntervalFromOptions(options);
 
         Log.i(TAG, "Adding alarm!!!!");
-        Log.i(TAG, "Interval: " + INTERVAL);
 
         AlarmManager am = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this.context, OnAlarmReceiver.class);
@@ -88,8 +86,7 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
   }
 
   private long getIntervalFromOptions(ReadableMap options) {
-    Log.i(TAG, "getIntervalFromOptions, options: " + options);
-    if (options.hasKey("period") && !options.isNull("period")) {
+    if (options != null && options.hasKey("period") && !options.isNull("period")) {
       String period = options.getString("period");
       switch (period) {
         case "INTERVAL_DAY":

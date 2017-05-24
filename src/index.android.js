@@ -54,7 +54,6 @@ const BackgroundTask: BackgroundTaskInterface = {
 
     DeviceEventEmitter.addListener('RNBackgroundJob', task);
 
-    console.log(options);
     const response = await BackgroundService.register(options);
 
     return response;
