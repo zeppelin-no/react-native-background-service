@@ -7,7 +7,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Promise;
 
-import android.util.Log;
+// import android.util.Log;
 
 // date related:
 import java.util.Date;
@@ -23,6 +23,7 @@ import android.app.PendingIntent;
 import android.os.SystemClock;
 
 import com.zeppelin.background.react.service.OnAlarmReceiver;
+import com.zeppelin.background.react.helpers.LogH;
 
 public class BackgroundReactModule extends ReactContextBaseJavaModule {
   private Context context;
@@ -30,8 +31,6 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
   private final static String REACT_MODULE_NAME = "BackgroundService";
   private final static int PENDING_INTENT_ID = 987;
   private final static String PENDING_INTENT_ACTION = "RCTBGServiceAction";
-  public static final String TAG = "RCTBGService";
-  // private static final long INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
 
   private static boolean hasLaunched = false;
 
@@ -51,18 +50,22 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void register(ReadableMap options, final Promise promise) {
-    Log.i(TAG, "");
-    Log.i(TAG, "");
-    Log.i(TAG, "=========================================");
-    Log.i(TAG, "");
-    Log.i(TAG, "");
-    Log.i(TAG, "register");
+    LogH.i("");
+    LogH.i("");
+    LogH.i("=========================================");
+    LogH.i("");
+    LogH.i("");
+    LogH.i("register");
 
     if (!hasLaunched) {
+      LogH.i("has not local launch");
+
       if (!this.isPendingIntentWorking()) {
+        this.cancelAlaram();
+
         long INTERVAL = getIntervalFromOptions(options);
 
-        Log.i(TAG, "Adding alarm!!!!");
+        LogH.i("Adding alarm!!!! with interval: " + INTERVAL);
 
         AlarmManager am = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this.context, OnAlarmReceiver.class);
@@ -70,7 +73,7 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
 
         PendingIntent pi = PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, i, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Log.i(TAG, "triggerOnce - setting repeating alarm");
+        LogH.i("triggerOnce - setting repeating alarm");
         am.setInexactRepeating(
           AlarmManager.ELAPSED_REALTIME_WAKEUP,
           SystemClock.elapsedRealtime(),
@@ -109,19 +112,12 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     Intent intent = new Intent(this.context, OnAlarmReceiver.class);
     intent.setAction(PENDING_INTENT_ACTION);
     boolean isWorking = (PendingIntent.getBroadcast(this.context, PENDING_INTENT_ID, intent, PendingIntent.FLAG_NO_CREATE) != null);
-    Log.i(TAG, "alarm is" + (isWorking ? "" : " NOT") + " working...");
+    LogH.i("alarm is" + (isWorking ? "" : " NOT") + " running...");
     return isWorking;
   }
 
-  @ReactMethod
-  public void cancel(ReadableMap options, final Promise promise) {
-    Log.i(TAG, "");
-    Log.i(TAG, "");
-    Log.i(TAG, "=========================================");
-    Log.i(TAG, "");
-    Log.i(TAG, "");
-    Log.i(TAG, "cancel");
-
+  private void cancelAlaram() {
+    LogH.i("cancel alarm");
     AlarmManager am = (AlarmManager) this.context.getSystemService(Context.ALARM_SERVICE);
     Intent intent = new Intent(this.context, OnAlarmReceiver.class);
     intent.setAction(PENDING_INTENT_ACTION);
@@ -129,6 +125,18 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
 
     am.cancel(pi);
     pi.cancel();
+  }
+
+  @ReactMethod
+  public void cancel(ReadableMap options, final Promise promise) {
+    LogH.i("");
+    LogH.i("");
+    LogH.i("=========================================");
+    LogH.i("");
+    LogH.i("");
+    LogH.i("cancel");
+
+    this.cancelAlaram();
 
     promise.resolve(true);
   }

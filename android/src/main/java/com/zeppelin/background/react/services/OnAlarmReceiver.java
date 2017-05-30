@@ -22,15 +22,12 @@ public class OnAlarmReceiver extends BroadcastReceiver {
       // boolean hasInternet = checkInternet(context);
       Intent serviceIntent = new Intent(context, BackgroundTaskService.class);
       serviceIntent.putExtra("hasInternet", "java - testur");
-      context.startService(serviceIntent);
-
-      HeadlessJsTaskService.acquireWakeLockNow(context);
-
-      // Lock us down, we'll need CPU for our duration
-      // StepCounterService.acquireStaticLock(context);
 
       // Start our service
-      // context.startService(new Intent(context, StepCounterService.class));
+      context.startService(serviceIntent);
+
+      // Lock us down, we'll need CPU for our duration
+      HeadlessJsTaskService.acquireWakeLockNow(context);
     }
   }
 
@@ -39,14 +36,19 @@ public class OnAlarmReceiver extends BroadcastReceiver {
     ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
     List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
     if (appProcesses == null) {
+      Log.i(TAG, "should trigger headlesstask");
       return false;
     }
     final String packageName = context.getPackageName();
     for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+      Log.i(TAG, "appProcess.importance: " + appProcess.importance);
+
       if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+        Log.i(TAG, "should NOT trigger headlesstask");
         return true;
       }
     }
+    Log.i(TAG, "should trigger headlesstask");
     return false;
   }
 }
