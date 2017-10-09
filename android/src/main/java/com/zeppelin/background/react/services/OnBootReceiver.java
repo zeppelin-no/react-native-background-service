@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.zeppelin.background.react.helpers.LogH;
+
 /**
  * This will ensure that our service will setup every time the phone is booted, meaning that
  * our alarm trigger will run even after phone restart and our app hasn't been specifically run yet.
@@ -19,23 +21,23 @@ public class OnBootReceiver extends BroadcastReceiver {
   private static final long INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES; // Every thirty minutes, in millis
 //    private static final long INTERVAL = 1000 * 5; // Every thirty minutes, in millis
   private static boolean hasLaunched = false;
-  public static final String TAG = "RCTBGService";
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.e(TAG, "#onReceive triggered - boot");
-    Log.e(TAG, "#onReceive not starting on boot atm");
+    LogH.breaker();
+    LogH.i("#onReceive triggered - boot");
+    LogH.i("#onReceive not starting on boot atm");
 
     // triggerOnce(context);
   }
 
   public static void triggerOnce(Context context) {
-    Log.e(TAG, "");
-    Log.e(TAG, "======== triggerOnce ========");
-    Log.e(TAG, "");
+    LogH.breaker();
+    LogH.i("triggerOnce");
+    LogH.breaker();
 
     if (!hasLaunched) {
-      Log.e(TAG, "triggerOnce - has not launched");
+      LogH.i("triggerOnce - has not launched");
 
       AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
@@ -44,12 +46,12 @@ public class OnBootReceiver extends BroadcastReceiver {
       // boolean alarmUp = (PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_NO_CREATE) != null);
       //
       // if (alarmUp) {
-      //   Log.d("myTag", "Alarm is already active");
+      //   LogH.d("myTag", "Alarm is already active");
       // }
 
       PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, i, 0);
 
-      Log.e(TAG, "triggerOnce - something osmething");
+      LogH.i("triggerOnce - something osmething");
 
       alarmManager.setInexactRepeating(
         AlarmManager.ELAPSED_REALTIME_WAKEUP,

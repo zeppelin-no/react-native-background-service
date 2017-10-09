@@ -10,15 +10,19 @@ import java.util.List;
 
 import com.facebook.react.HeadlessJsTaskService;
 
+import com.zeppelin.background.react.helpers.LogH;
+
 public class OnAlarmReceiver extends BroadcastReceiver {
-  public static final String TAG = "RCTBGService";
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.i(TAG, "======= OnAlarmReceiver triggered =======");
-    Log.i(TAG, "OnAlarmReceiver action: " + intent.getAction());
+    LogH.empty();
+    LogH.empty();
+    LogH.breakerTop();
+    LogH.i("OnAlarmReceiver triggered");
+    LogH.i("OnAlarmReceiver action: " + intent.getAction());
     if (!isAppOnForeground((context))) {
-      Log.i(TAG, "OnAlarmReceiver is in background!");
+      LogH.i("OnAlarmReceiver is in background!");
       // boolean hasInternet = checkInternet(context);
       Intent serviceIntent = new Intent(context, BackgroundTaskService.class);
       serviceIntent.putExtra("hasInternet", "java - testur");
@@ -36,19 +40,19 @@ public class OnAlarmReceiver extends BroadcastReceiver {
     ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
     List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
     if (appProcesses == null) {
-      Log.i(TAG, "should trigger headlesstask");
+      LogH.i("should trigger headlesstask");
       return false;
     }
     final String packageName = context.getPackageName();
     for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-      Log.i(TAG, "appProcess.importance: " + appProcess.importance);
+      LogH.i("appProcess.importance: " + appProcess.importance);
 
       if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
-        Log.i(TAG, "should NOT trigger headlesstask");
+        LogH.i("should NOT trigger headlesstask");
         return true;
       }
     }
-    Log.i(TAG, "should trigger headlesstask");
+    LogH.i("should trigger headlesstask");
     return false;
   }
 }

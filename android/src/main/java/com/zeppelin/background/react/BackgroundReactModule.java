@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.Promise;
 
 // import android.util.Log;
@@ -50,17 +51,15 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void register(ReadableMap options, final Promise promise) {
-    LogH.i("");
-    LogH.i("");
-    LogH.i("=========================================");
-    LogH.i("");
-    LogH.i("");
+    LogH.empty();
+    LogH.empty();
+    LogH.breakerTop();
     LogH.i("register");
 
-    if (!hasLaunched) {
-      LogH.i("has not local launch");
-
-      if (!this.isPendingIntentWorking()) {
+    // if (!hasLaunched) {
+    //   LogH.i("has not local launch");
+    //
+    //   if (!this.isPendingIntentWorking()) {
         this.cancelAlaram();
 
         long INTERVAL = getIntervalFromOptions(options);
@@ -80,10 +79,12 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
           INTERVAL,
           pi
         );
-      }
-    }
+    //   }
+    // }
 
     hasLaunched = true;
+
+    LogH.breakerBottom();
 
     promise.resolve(true);
   }
@@ -91,6 +92,7 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
   private long getIntervalFromOptions(ReadableMap options) {
     if (options != null && options.hasKey("period") && !options.isNull("period")) {
       String period = options.getString("period");
+
       switch (period) {
         case "INTERVAL_DAY":
           return AlarmManager.INTERVAL_DAY;
@@ -100,6 +102,12 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
           return AlarmManager.INTERVAL_HALF_HOUR;
         case "INTERVAL_FIFTEEN_MINUTES":
           return AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+        case "MANUAL":
+          if (options.hasKey("interval") && !options.isNull("interval")) {
+            if (options.getType("interval") == ReadableType.Number) {
+              return (long) options.getInt("interval");
+            }
+          }
         case "INTERVAL_HOUR":
         default:
           return AlarmManager.INTERVAL_HOUR;
@@ -131,10 +139,11 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
   public void cancel(ReadableMap options, final Promise promise) {
     LogH.i("");
     LogH.i("");
-    LogH.i("=========================================");
+    LogH.breaker();
     LogH.i("");
     LogH.i("");
     LogH.i("cancel");
+    LogH.breaker();
 
     this.cancelAlaram();
 

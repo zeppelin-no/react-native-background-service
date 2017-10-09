@@ -16,7 +16,6 @@ import com.facebook.react.common.LifecycleState;
 import com.zeppelin.background.react.helpers.LogH;
 
 public class BackgroundTaskService extends HeadlessJsTaskService {
-  public static final String TAG = "RCTBGService";
   private static final String TASK_ID = "BackgroundTask";
 
   @Override
@@ -28,7 +27,7 @@ public class BackgroundTaskService extends HeadlessJsTaskService {
     LogH.i("intent-Uri: " + intent.getDataString());
     LogH.i("intent-type: " + intent.getType());
 
-    if (extras != null && !isAppInForeground()) {
+    if (extras != null && shouldTriggerTask()) {
       LogH.i("HeadlessJsTaskConfig - extraz, triggering task!?!?");
       try {
         return new HeadlessJsTaskConfig(
@@ -46,7 +45,7 @@ public class BackgroundTaskService extends HeadlessJsTaskService {
     return null;
   }
 
-  private boolean isAppInForeground() {
+  private boolean shouldTriggerTask() {
     final ReactInstanceManager reactInstanceManager =
             ((ReactApplication) getApplication())
                     .getReactNativeHost()
@@ -54,7 +53,8 @@ public class BackgroundTaskService extends HeadlessJsTaskService {
 
     ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
 
-    LogH.i("=== isAppInForeground ===");
+    LogH.breakerSmall();
+    LogH.i("shouldTriggerTask");
     LogH.i("getApplication: " + (ReactApplication) getApplication());
     LogH.i("getReactNativeHost: " + ((ReactApplication) getApplication()).getReactNativeHost());
     LogH.i("getReactInstanceManager: " + reactInstanceManager);
@@ -64,10 +64,37 @@ public class BackgroundTaskService extends HeadlessJsTaskService {
       LogH.i("getLifecycleState: " + reactContext.getLifecycleState());
     }
     LogH.i("RESUMED: " + LifecycleState.RESUMED);
-    LogH.i("=== isAppInForeground ===");
+    LogH.breakerSmall();
 
-    return reactContext != null && reactContext.getLifecycleState() == LifecycleState.RESUMED;
+    return reactContext != null && reactContext.getLifecycleState() != LifecycleState.RESUMED;
   }
+
+  // TODO: we might want to revert to this when we are on RN-version with this:
+  // https://github.com/facebook/react-native/pull/15929/commits/8b070c7535e357a6c96746c2e83ff65943645cd5
+  // private boolean isAppInForeground() {
+  //   final ReactInstanceManager reactInstanceManager =
+  //           ((ReactApplication) getApplication())
+  //                   .getReactNativeHost()
+  //                   .getReactInstanceManager();
+  //
+  //   ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
+  //
+  //   LogH.breakerSmall();
+  //   LogH.i("isAppInForeground");
+  //   LogH.i("getApplication: " + (ReactApplication) getApplication());
+  //   LogH.i("getReactNativeHost: " + ((ReactApplication) getApplication()).getReactNativeHost());
+  //   LogH.i("getReactInstanceManager: " + reactInstanceManager);
+  //
+  //   LogH.i("reactContext: " + reactContext);
+  //   if (reactContext != null) {
+  //     LogH.i("getLifecycleState: " + reactContext.getLifecycleState());
+  //   }
+  //   LogH.i("RESUMED: " + LifecycleState.RESUMED);
+  //   LogH.breakerSmall();
+  //
+  //   return reactContext != null && reactContext.getLifecycleState() == LifecycleState.RESUMED;
+  // }
+
 
 
   // @Override
@@ -101,6 +128,7 @@ public class BackgroundTaskService extends HeadlessJsTaskService {
   public void onDestroy() {
     super.onDestroy();
     LogH.i("TASK DESTROY");
+    LogH.breakerBottom();
   }
 
   // @Override
