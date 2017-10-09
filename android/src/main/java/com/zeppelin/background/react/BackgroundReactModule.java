@@ -56,10 +56,10 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
     LogH.breakerTop();
     LogH.i("register");
 
-    // if (!hasLaunched) {
-    //   LogH.i("has not local launch");
-    //
-    //   if (!this.isPendingIntentWorking()) {
+    if (!hasLaunched) {
+      LogH.i("has not local launch");
+
+      if (!this.isPendingIntentWorking()) {
         this.cancelAlaram();
 
         long INTERVAL = getIntervalFromOptions(options);
@@ -79,8 +79,8 @@ public class BackgroundReactModule extends ReactContextBaseJavaModule {
           INTERVAL,
           pi
         );
-    //   }
-    // }
+      }
+    }
 
     hasLaunched = true;
 
