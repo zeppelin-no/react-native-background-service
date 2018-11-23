@@ -9,3 +9,9 @@ Uses `react-native-background-fetch` for iOS
 |-|-|-|-|
 | period  | `INTERVAL_DAY`, `INTERVAL_HALF_DAY`, `INTERVAL_HALF_HOUR`, `INTERVAL_FIFTEEN_MINUTES`, `INTERVAL_HOUR`, `MANUAL` | string | one of |
 | interval | ie. `5000` | int  | needs `MANUAL` as `period`, is in milliseconds |
+
+## Upload new version to gemfury
+```sh
+$ git remote add fury https://kakebake@git.fury.io/zeppelin-no/<package-name>.git
+$ git push fury master
+```
