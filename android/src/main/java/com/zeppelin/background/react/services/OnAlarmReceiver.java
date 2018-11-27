@@ -16,22 +16,23 @@ public class OnAlarmReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
+    // Kan dette gjøres med JobIntentService?
     LogH.empty();
     LogH.empty();
     LogH.breakerTop();
     LogH.i("OnAlarmReceiver triggered");
     LogH.i("OnAlarmReceiver action: " + intent.getAction());
     if (!isAppOnForeground((context))) {
-      LogH.i("OnAlarmReceiver is in background!");
-      // boolean hasInternet = checkInternet(context);
-      Intent serviceIntent = new Intent(context, BackgroundTaskService.class);
-      serviceIntent.putExtra("hasInternet", "java - testur");
+      // LogH.i("OnAlarmReceiver is in background!");
+      // // boolean hasInternet = checkInternet(context);
+      // Intent serviceIntent = new Intent(context, BackgroundTaskService.class);
+      // serviceIntent.putExtra("hasInternet", "java - testur");
 
-      // Start our service
-      context.startService(serviceIntent);
+      // // Start our service
+      // context.startService(serviceIntent);
 
-      // Lock us down, we'll need CPU for our duration
-      HeadlessJsTaskService.acquireWakeLockNow(context);
+      // // Lock us down, we'll need CPU for our duration
+      // HeadlessJsTaskService.acquireWakeLockNow(context);
     }
   }
 
